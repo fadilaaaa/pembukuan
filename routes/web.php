@@ -17,3 +17,12 @@ Route::get('/', function () {
     return view('login');
 });
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth');
+// Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+Route::get('/setting', [App\Http\Controllers\DashboardController::class, 'setting'])->middleware('auth');
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::get('/kelola-kas', [App\Http\Controllers\KasController::class, 'index']);
+
+    Route::get('/riwayat-kas', [App\Http\Controllers\KasController::class, 'riwayat']);
+});

@@ -12,7 +12,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-1">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Balance (Juli 2024)</div>
+                                    Balance Hari Ini</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800 text-nowrap">Rp. 40.000.000</div>
                             </div>
                         </div>
@@ -25,7 +25,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-1">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Kas Masuk (Juli 2024)</div>
+                                    Kas Masuk Hari Ini</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800 text-nowrap">Rp.
                                     {{ number_format($kasMasukHariIni, 0, ',', '.') }}</div>
                             </div>
@@ -39,7 +39,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-1">
                                 <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                    Kas Keluar (Juli 2024)</div>
+                                    Kas Keluar Hari Ini</div>
                                 <div class="h5 mb-0 font-weight-bold text-danger text-nowrap">Rp.
                                     -{{ number_format($kasKeluarHariIni, 0, ',', '.') }}</div>
                             </div>

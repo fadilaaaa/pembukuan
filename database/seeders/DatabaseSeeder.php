@@ -42,24 +42,30 @@ class DatabaseSeeder extends Seeder
 
         $datearr = CarbonPeriod::create(Carbon::now()->subYear()->startOfMonth(), Carbon::now())->toArray();
         foreach ($datearr as $date) {
-            $jenis = $faker->randomElement(["masuk", "keluar"]);
-            // $date = $ta;
-
-            $kategori = $faker->randomElement([1, 2]);
             $kas = \App\Models\Kas::create([
                 "no_kas" => '',
                 "tanggal" => $date->translatedFormat('d F Y'),
-                "jenis" => $jenis,
+                "jenis" => "masuk",
                 "jumlah" => $faker->numberBetween(100000, 1000000),
                 "keterangan" => $faker->sentence(),
                 "created_at" => strtotime($date)
             ]);
-            if ($jenis == "keluar") {
-                $kas->no_kas = $kas->id . "/KK/" . $date->format('m') . "/" . $date->format('Y');
-            }
-            if ($jenis == "masuk") {
-                $kas->no_kas = $kas->id . "/DK/" . $date->format('m') . "/" . $date->format('Y');
-            }
+            $kategori = $faker->randomElement([1, 2]);
+            $kas->no_kas = $kas->id . "/DK/" . $date->format('m') . "/" . $date->format('Y');
+            $kas->save();
+            $kas->kategoris()->attach($kategori);
+
+
+            $kas = \App\Models\Kas::create([
+                "no_kas" => '',
+                "tanggal" => $date->translatedFormat('d F Y'),
+                "jenis" => "keluar",
+                "jumlah" => $faker->numberBetween(100000, 1000000),
+                "keterangan" => $faker->sentence(),
+                "created_at" => strtotime($date)
+            ]);
+            $kategori = $faker->randomElement([1, 2]);
+            $kas->no_kas = $kas->id . "/KK/" . $date->format('m') . "/" . $date->format('Y');
             $kas->save();
             $kas->kategoris()->attach($kategori);
         }

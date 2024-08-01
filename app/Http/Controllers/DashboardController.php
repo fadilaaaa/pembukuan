@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class DashboardController extends Controller
@@ -11,8 +12,67 @@ class DashboardController extends Controller
     {
         $kasMasukHariIni = \App\Models\Kas::debetToday();
         $kasKeluarHariIni = \App\Models\Kas::kreditToday();
-        // dd($kasKeluarHariIni, $kasMasukHariIni);
-        return view('dashboard', compact('kasMasukHariIni', 'kasKeluarHariIni'));
+        $dataKasMasukSeminggu = \App\Models\Kas::where('jenis', 'masuk')
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->get()
+            ->groupBy(
+                function ($kas) {
+                    $daftar_hari = array(
+                        'Sunday' => 'Minggu',
+                        'Monday' => 'Senin',
+                        'Tuesday' => 'Selasa',
+                        'Wednesday' => 'Rabu',
+                        'Thursday' => 'Kamis',
+                        'Friday' => 'Jumat',
+                        'Saturday' => 'Sabtu'
+                    );
+                    return $daftar_hari[$kas->created_at->format('l')];
+                }
+            )->map(function ($group) {
+                return $group->sum('jumlah');
+            });
+        $dataKasKeluarSeminggu = \App\Models\Kas::where('jenis', 'keluar')
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->get()
+            ->groupBy(
+                function ($kas) {
+                    $daftar_hari = array(
+                        'Sunday' => 'Minggu',
+                        'Monday' => 'Senin',
+                        'Tuesday' => 'Selasa',
+                        'Wednesday' => 'Rabu',
+                        'Thursday' => 'Kamis',
+                        'Friday' => 'Jumat',
+                        'Saturday' => 'Sabtu'
+                    );
+                    return $daftar_hari[$kas->created_at->format('l')];
+                }
+            )->map(function ($group) {
+                return $group->sum('jumlah');
+            });
+        $haris = [
+            'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'
+        ];
+        $grafikKasMasuk = [];
+        foreach ($haris as $hari) {
+            if (!isset($dataKasMasukSeminggu[$hari])) {
+                $grafikKasMasuk[$hari] = 0;
+            } else {
+                $grafikKasMasuk[$hari] = $dataKasMasukSeminggu[$hari];
+            }
+        }
+        $grafikKasKeluar = [];
+        foreach ($haris as $hari) {
+            if (!isset($dataKasKeluarSeminggu[$hari])) {
+                $grafikKasKeluar[$hari] = 0;
+            } else {
+                $grafikKasKeluar[$hari] = $dataKasKeluarSeminggu[$hari];
+            }
+        }
+
+
+        // dd($grafikKasMasuk, $grafikKasKeluar);
+        return view('dashboard', compact('kasMasukHariIni', 'kasKeluarHariIni', 'grafikKasMasuk', 'grafikKasKeluar'));
     }
     public function setting(Request $request)
     {

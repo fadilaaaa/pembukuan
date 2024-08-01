@@ -76,8 +76,10 @@
         }
         const ctx = document.getElementById('chartKas').getContext('2d');
         const labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-        const dataKasMasuk = [100000, 150000, 200000, 250000, 300000, 350000, 400000];;
-        const dataKasKeluar = [50000, 75000, 100000, 125000, 150000, 175000, 200000];;
+        const dataKasMasuk = @json($grafikKasMasuk);
+        console.log(dataKasMasuk);
+
+        const dataKasKeluar = @json($grafikKasKeluar);
 
         const myChart = new Chart(ctx, {
             type: 'line', // Ubah type menjadi 'line'
@@ -85,13 +87,23 @@
                 labels: labels,
                 datasets: [{
                         label: 'Kas Masuk',
-                        data: dataKasMasuk,
+                        data: Object.keys(dataKasMasuk).map((key) => {
+                            return {
+                                x: key,
+                                y: dataKasMasuk[key]
+                            }
+                        }),
                         backgroundColor: 'green',
                         borderColor: 'green', // Tambahkan borderColor untuk garis
                     },
                     {
                         label: 'Kas Keluar',
-                        data: dataKasKeluar,
+                        data: Object.keys(dataKasKeluar).map((key) => {
+                            return {
+                                x: key,
+                                y: dataKasKeluar[key]
+                            }
+                        }),
                         backgroundColor: 'red',
                         borderColor: 'red', // Tambahkan borderColor untuk garis
                     },

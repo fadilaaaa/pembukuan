@@ -6,7 +6,7 @@
     <div class="container-fluid mx-0 px-0">
         <div class="col-xl-12">
             <div class="card shadow mb-1">
-                <form action="{{ url('kelola-kas') }}" method="post">
+                <form action="{{ url('kelola-kas') }}" method="post" id="formStore">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Catat Arus Kas</h6>
                     </div>
@@ -40,7 +40,7 @@
                                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3" required></textarea>
                             </div>
                             <div class="form-group col-6 d-flex justify-content-around items-center" style="margin: auto">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <button id="submit" class="btn btn-primary">Simpan</button>
                                 <button class="btn btn-secondary">Import</button>
                             </div>
                         </div>
@@ -60,16 +60,9 @@
                 maxItems: 1,
                 sortField: 'text'
             });
-            const dataKategori = [{
-                    value: 1,
-                    text: 'Tagihan BPJS'
-                },
-                {
-                    value: 2,
-                    text: 'Pembayaran BPJS'
-                }
-            ];
-            $('#kategori').selectize({
+            const dataKategori = @json($kat);
+            console.log(dataKategori);
+            const kat_sel = $('#kategori').selectize({
                 delimiter: ',',
                 persist: false,
                 maxItems: null,
@@ -77,7 +70,13 @@
                 labelField: 'text',
                 valueField: 'value',
                 searchField: 'text',
-                create: false
+
+                create: false,
+                render: {
+                    item: function(item, escape) {
+                        return `<span class="badge ${item.class} mr-1">${escape(item.text)}</span>`;
+                    },
+                }
             })
             $('#jumlah').on({
                 keyup: function() {
@@ -85,6 +84,12 @@
                         return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                     });
                 }
+            })
+            $('#submit').on('click', function(event) {
+                // event.preventDefault();
+                console.log($('#jumlah').val());
+                $('#jumlah').val($('#jumlah').val().replace(/\D/g, ""));
+                $('#formStore').submit();
             })
         });
     </script>

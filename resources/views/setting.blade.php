@@ -23,22 +23,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Umum</td>
-                                <td><span class="badge badge-success">Umum</span></td>
-                                <td>
-                                    <button class="btn btn-warning">Edit</button>
-                                    <button class="btn btn-danger">Hapus</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>BPJS</td>
-                                <td><span class="badge badge-warning">BPJS</span></td>
-                                <td>
-                                    <button class="btn btn-warning">Edit</button>
-                                    <button class="btn btn-danger">Hapus</button>
-                                </td>
-                            </tr>
+                            @foreach ($kategori as $item)
+                                <tr>
+                                    <td>{{ $item->nama }}</td>
+                                    <td><span class="badge {{ $item->class }}">{{ $item->nama }}</span></td>
+                                    <td>
+                                        <form action="{{ url('setting/' . $item->id) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="button" class="btn btn-warning btn_edit"
+                                                data-id="{{ $item->id }}" data-nama="{{ $item->nama }}">Edit</button>
+
+                                            <input class="btn btn-danger" type="submit" value="Hapus">
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -49,17 +49,26 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="{{ url('logout') }}">Logout</a>
-                </div>
+                <form action="" method="post" id="modalForm">
+                    @csrf
+                    <input id="modalMethod" type="hidden" name="_method">
+                    <div class="modal-header">
+                        {{-- <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5> --}}
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Nama Kategori</label>
+                            <input id="modalNama" name="nama" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -68,7 +77,19 @@
     <script>
         $(document).ready(function() {
             $('#btnadd').click(function() {
+
+                $('#modalForm').attr('action', '');
                 $('#dialogmodal').modal('show');
+            });
+            $('.btn_edit').each(function() {
+                const btn_edit = $(this)
+                btn_edit.on('click', function() {
+                    // console.log(this);
+                    $('#modalMethod').val('put')
+                    $('#modalNama').val(btn_edit.data('nama'))
+                    $('#modalForm').attr('action', "{{ url('/setting') }}/" + btn_edit.data('id'));
+                    $('#dialogmodal').modal('show');
+                });
             });
         });
     </script>

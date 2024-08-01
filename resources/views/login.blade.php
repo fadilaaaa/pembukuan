@@ -11,8 +11,8 @@
 
     <title>Klinik | Login</title>
     <!-- Favicons -->
-    <link href="{{ asset('/img/favicon.ico') }}" rel="icon">
-    <link href="{{ asset('/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('/favicon/favicon.ico') }}" rel="icon">
+    <link href="{{ asset('/favicon/apple-touch-icon.png') }}" rel="apple-touch-icon">
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -49,13 +49,14 @@
 <body>
     <div class="w-100 vh-100 m-0 p-0 o-hidden">
         <div class="row h-100">
-            <div class="col-xl-6 box-left d-flex justify-content-center align-items-center">
-                <img src="{{ asset('img/dlh.png') }}" alt="DLHK">
+            <div style="" class="col-xl-6 box-left d-flex justify-content-center align-items-center">
+                <img class="rounded-circle" style="background-color: white" src="{{ asset('img/logo.webp') }}"
+                    alt="DLHK">
             </div>
             <div class="col-xl-6 bg-white d-flex justify-content-center align-items-center">
                 <div class="col-md-6 col-8">
                     <div class="text-center">
-                        <h1 class="h4 text-primary font-weight-bold mb-4">Login DLHK</h1>
+                        <h1 class="h4 text-primary font-weight-bold mb-4">Login</h1>
                     </div>
                     @if (session('error'))
                         <div class="alert alert-danger">

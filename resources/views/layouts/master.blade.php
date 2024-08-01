@@ -12,8 +12,8 @@
     <title>Klinik | @yield('title')</title>
 
     <!-- Favicons -->
-    <link href="{{ asset('img/favicon.ico') }}" rel="icon">
-    <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('favicon/favicon.ico') }}" rel="icon">
+    <link href="{{ asset('favicon/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
     <!-- Custom fonts for this template-->
     <link href="{{ url('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -161,6 +161,50 @@
         handleDeviceChange(mediaQuery)
     </script>
     @stack('scripts')
+    <script>
+        @if (session('success'))
+            // swal("Berhasil!", "{{ session('success') }}", "success");
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation: false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            toastMixin.fire({
+                animation: true,
+                title: '{{ session('success') }}'
+            });
+        @endif
+        @if (session('error'))
+            // swal("Gagal!", "{{ session('error') }}", "error");
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'error',
+                title: 'General Title',
+                animation: false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            toastMixin.fire({
+                animation: true,
+                title: '{{ session('error') }}'
+            });
+        @endif
+    </script>
 </body>
 
 </html>

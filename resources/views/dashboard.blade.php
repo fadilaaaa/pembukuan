@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         <div class="row flex-nowrap overflow-auto">
-            <div class="col-xl-3  mb-4">
+            {{-- <div class="col-xl-3  mb-4">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-xl-3  mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
@@ -26,7 +26,8 @@
                             <div class="col mr-1">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Kas Masuk (Juli 2024)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-nowrap">Rp. 70.000.000</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-nowrap">Rp.
+                                    {{ number_format($kasMasukHariIni, 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </div>
@@ -39,7 +40,8 @@
                             <div class="col mr-1">
                                 <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                     Kas Keluar (Juli 2024)</div>
-                                <div class="h5 mb-0 font-weight-bold text-danger text-nowrap">Rp. -30.000.000</div>
+                                <div class="h5 mb-0 font-weight-bold text-danger text-nowrap">Rp.
+                                    -{{ number_format($kasKeluarHariIni, 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </div>

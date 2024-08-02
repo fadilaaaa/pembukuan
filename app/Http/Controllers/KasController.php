@@ -62,7 +62,7 @@ class KasController extends Controller
     public function riwayat(Request $request)
     {
         $start_date = $request->start ?? date('Y-m-d', 0);
-        $end_date = $request->end ?? Carbon::now()->format('Y-m-d');
+        $end_date = $request->end ?? Carbon::now();
         $kategori = $request->kategori ?? [];
         $selected_kategori = $request->kategori ?? [];
         if ($kategori != []) {

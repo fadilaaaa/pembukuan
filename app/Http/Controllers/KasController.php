@@ -80,7 +80,6 @@ class KasController extends Controller
             'tanggal' => 'required',
             'jenis' => 'required',
             'keterangan' => 'required',
-            'kategori' => 'required',
         ]);
         DB::beginTransaction();
         try {

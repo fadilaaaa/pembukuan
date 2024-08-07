@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +20,11 @@ Route::get('/', function () {
     return view('login');
 })->name('login');
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::get('logout', function () {
+    Auth::logout();
+
+    return redirect('/');
+});
 Route::get('/pucer/{id}', [App\Http\Controllers\KasController::class, 'getPucer']);
 
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth');
@@ -26,6 +33,9 @@ Route::get('/setting', [App\Http\Controllers\DashboardController::class, 'settin
 Route::post('/setting', [App\Http\Controllers\DashboardController::class, 'setting_add_kategori'])->middleware('auth');
 Route::put('/setting/{id}', [App\Http\Controllers\DashboardController::class, 'setting_edit_kategori'])->middleware('auth');
 Route::delete('/setting/{id}', [App\Http\Controllers\DashboardController::class, 'setting_delete_kategori'])->middleware('auth');
+Route::put('akun-edit', [App\Http\Controllers\DashboardController::class, 'editakun'])
+    ->middleware('auth')
+    ->name('edit.akun');
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('/kelola-kas', [App\Http\Controllers\KasController::class, 'index']);
     Route::post('/kelola-kas', [App\Http\Controllers\KasController::class, 'store']);

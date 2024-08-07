@@ -162,8 +162,8 @@ class KasController extends Controller
             'kas' => $kas,
         ])->setPaper('a4', 'landscape');
         return $pdf->download();
-        return view('export.tes', [
-            'kas' => $kas,
-        ]);
+        // return view('export.tes', [
+        //     'kas' => $kas,
+        // ]);
     }
 }

@@ -74,6 +74,18 @@ class DashboardController extends Controller
         // dd($grafikKasMasuk, $grafikKasKeluar);
         return view('dashboard', compact('kasMasukHariIni', 'kasKeluarHariIni', 'grafikKasMasuk', 'grafikKasKeluar', 'balance'));
     }
+    public function editakun(Request $request)
+    {
+        $username = $request->username;
+        $password = $request->password;
+
+        $user = \App\Models\User::where('id', auth()->user()->id)->first();
+        $user->username = $username;
+        $user->password = bcrypt($password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Akun telah diupdate');
+    }
     public function setting(Request $request)
     {
         $kategori = \App\Models\Kategori::all();

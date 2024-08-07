@@ -48,8 +48,9 @@
                     <h6 class="m-0 font-weight-bold text-primary">Akun Admin</h6>
                 </div>
                 <div class="card-body pt-1">
-                    <form action="{{ url('edit-akun') }}" method="post" id="modalForm">
+                    <form action="{{ route('edit.akun') }}" method="post" id="modalForm">
                         @csrf
+                        @method('PUT')
                         <div class="form-group">
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">

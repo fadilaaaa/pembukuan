@@ -25,6 +25,53 @@ class KasController extends Controller
         }
         return view('kas.index', compact('kat'));
     }
+    public function getPucer(Request $request, $id)
+    {
+        $kas = Kas::find($id);
+        $pdf = Pdf::loadView('export.tes', [
+            'kas' => $kas,
+            'ketua' => $request->get('ketua'),
+            'bendahara' => $request->get('bendahara'),
+        ])->setPaper('a4', 'landscape');
+        return $pdf->download('voucher-' . $kas->no_kas . '.pdf');
+    }
+    public function storePucer(Request $request, $id = null)
+    {
+        if ($id != null) {
+            $kas = Kas::find($request->id);
+            $pdf = Pdf::loadView('export.tes', [
+                'kas' => $kas,
+            ])->setPaper('a4', 'landscape');
+            return $pdf->download('voucher-' . $kas->no_kas . '.pdf');
+        } else {
+            $request->validate([
+                'jumlah' => 'required',
+                'tanggal' => 'required',
+                'jenis' => 'required',
+                'keterangan' => 'required',
+                'kategori' => 'required',
+            ]);
+            DB::beginTransaction();
+            try {
+                $kas = new Kas();
+                $kas->jumlah = $request->jumlah;
+                $kas->tanggal = Carbon::parse($request->tanggal)->translatedFormat('d F Y');
+                $kas->jenis = $request->jenis;
+                $kas->keterangan = $request->keterangan;
+                $kas->setSaldo();
+                $kas->setNomorKas("/KK/" . Carbon::parse($request->tanggal)->format('m') . "/" . Carbon::parse($request->tanggal)->format('Y'));
+
+                $kas->save();
+                $kas->kategoris()->attach($request->kategori);
+                DB::commit();
+                return response()->json(['success' => 'Data berhasil ditambahkan', 'id' => $kas->id]);
+                // return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+        }
+    }
     public function store(Request $request)
     {
         // dd($request->all());
@@ -37,17 +84,16 @@ class KasController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            $kas = \App\Models\Kas::create([
-                "no_kas" => '',
-                "jumlah" => $request->jumlah,
-                "tanggal" => Carbon::parse($request->tanggal)->translatedFormat('d F Y'),
-                "jenis" => $request->jenis,
-                "keterangan" => $request->keterangan,
-            ]);
+            $kas = new Kas();
+            $kas->jumlah = $request->jumlah;
+            $kas->tanggal = Carbon::parse($request->tanggal)->translatedFormat('d F Y');
+            $kas->jenis = $request->jenis;
+            $kas->keterangan = $request->keterangan;
+            $kas->setSaldo();
             if ($request->jenis == 'masuk') {
-                $kas->no_kas = $kas->id . "/DK/" . Carbon::parse($kas->created_at)->format('m') . "/" . Carbon::parse($kas->created_at)->format('Y');
+                $kas->setNomorKas("/DK/" . Carbon::parse($request->tanggal)->format('m') . "/" . Carbon::parse($request->tanggal)->format('Y'));
             } else {
-                $kas->no_kas = $kas->id .  "/KK/" . Carbon::parse($kas->created_at)->format('m') . "/" . Carbon::parse($kas->created_at)->format('Y');
+                $kas->setNomorKas("/KK/" . Carbon::parse($request->tanggal)->format('m') . "/" . Carbon::parse($request->tanggal)->format('Y'));
             }
             $kas->save();
             $kas->kategoris()->attach($request->kategori);
@@ -96,21 +142,28 @@ class KasController extends Controller
             'created_at',
             [$start_date, $end_date],
             $boolean = 'or'
-        )->orderByDesc('created_at')->get();
-        // return view('export.riwayatKas', [
-        //     'kas' => $kas,
-        //     'start_date' => Carbon::parse($start_date)->translatedFormat('d F Y'),
-        //     'end_date' => Carbon::parse($end_date)->translatedFormat('d F Y'),
-        //     'ketua' => $ketua,
-        //     'bendahara' => $bendahara
-        // ]);
+        )->get();
+        $kasBeforeSaldo = Kas::where('created_at', '<', $start_date)->orderByDesc('created_at')->first()->saldo;
+        // $saldo = $kasBeforeSaldo ? $kasBeforeSaldo->saldo : 0;
         $pdf = Pdf::loadView('export.riwayatKas', [
             'kas' => $kas,
             'start_date' => Carbon::parse($start_date)->translatedFormat('d F Y'),
             'end_date' => Carbon::parse($end_date)->translatedFormat('d F Y'),
             'ketua' => $ketua,
-            'bendahara' => $bendahara
-        ]);
+            'bendahara' => $bendahara,
+            'saldoAwal' => $kasBeforeSaldo,
+        ])->setPaper('a4', 'landscape');
         return $pdf->download('riwayat-kas.pdf');
+    }
+    public function tescetak()
+    {
+        $kas = Kas::where('jenis', 'keluar')->first();
+        $pdf = Pdf::loadView('export.tes', [
+            'kas' => $kas,
+        ])->setPaper('a4', 'landscape');
+        return $pdf->download();
+        return view('export.tes', [
+            'kas' => $kas,
+        ]);
     }
 }

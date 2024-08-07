@@ -41,6 +41,9 @@
                             </div>
                             <div class="form-group col-6 d-flex justify-content-around items-center" style="margin: auto">
                                 <button id="submit" class="btn btn-primary">Simpan</button>
+                                <a id="pucer" class="btn btn-primary" style="display: none">Simpan &
+                                    download
+                                    voucher</a>
                                 <button class="btn btn-secondary">Import</button>
                             </div>
                         </div>
@@ -49,16 +52,137 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="dialogmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <input id="modalMethod" type="hidden" name="_method">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Masukkan Nama Ketua & Bendahara</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Ketua</label>
+                        <input id="ketua" name="ketua" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Bendahara</label>
+                        <input id="bendahara" name="bendahara" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <input id="btnSubmit" type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+@push('styles')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @push('scripts')
     <script>
+        const resetSubmit = () => {
+            var toastMixin = Swal.mixin({
+                toast: true,
+                icon: 'success',
+                title: 'General Title',
+                animation: false,
+                position: 'top-right',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            toastMixin.fire({
+                animation: true,
+                title: 'Data berhasil disimpan'
+            });
+            // $('#tanggal').val('');
+            $('#kategori').val('');
+            $('#jenis').val('');
+            $('#jumlah').val('');
+            $('#keterangan').val('');
+
+            $('#ketua').val('');
+            $('#bendahara').val('');
+            $('#dialogmodal').modal('hide');
+
+        }
+        const submitPucer = () => {
+            const tanggal = $('#tanggal').val();
+            const jenis = 'keluar';
+            const jumlah = $('#jumlah').val().replace(/\D/g, "");
+            const kategori = $('#kategori').val();
+            const keterangan = $('#keterangan').val();
+            const ketua = $('#ketua').val();
+            const bendahara = $('#bendahara').val();
+            const data = {
+                tanggal,
+                jenis,
+                jumlah,
+                kategori,
+                keterangan,
+                ketua,
+                bendahara
+            }
+            $.ajax({
+                url: "{{ url('kelola-kas') }}" + '/pucer',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    console.log(response);
+                    resetSubmit();
+                    window.location.href = '{{ url('pucer') }}/' + response.id + '?ketua=' + ketua +
+                        '&bendahara=' + bendahara;
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        }
         $(document).ready(function() {
+            $('#pucer').on('click', function(e) {
+                e.preventDefault();
+                $('#dialogmodal').modal('show');
+                // submitPucer();
+            })
+            $('#btnSubmit').on('click', function(e) {
+                e.preventDefault();
+                const ketua = $('#ketua').val();
+                const bendahara = $('#bendahara').val();
+                if (ketua && bendahara) {
+                    submitPucer();
+                } else {
+                    alert('Ketua dan Bendahara harus diisi');
+                }
+            })
             $('#jenis').selectize({
                 create: false,
                 delimiter: ',',
                 persist: false,
                 maxItems: 1,
-                sortField: 'text'
+                sortField: 'text',
+                onChange: function(value) {
+                    console.log($('#pucer'));
+                    if (value == 'keluar') {
+                        $('#submit').hide();
+                        $('#pucer').show();
+                    } else {
+                        $('#submit').show();
+                        $('#pucer').hide();
+                    }
+                }
             });
             const dataKategori = @json($kat);
             console.log(dataKategori);

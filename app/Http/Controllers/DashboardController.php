@@ -69,10 +69,10 @@ class DashboardController extends Controller
                 $grafikKasKeluar[$hari] = $dataKasKeluarSeminggu[$hari];
             }
         }
-
+        $balance = \App\Models\Kas::balance();
 
         // dd($grafikKasMasuk, $grafikKasKeluar);
-        return view('dashboard', compact('kasMasukHariIni', 'kasKeluarHariIni', 'grafikKasMasuk', 'grafikKasKeluar'));
+        return view('dashboard', compact('kasMasukHariIni', 'kasKeluarHariIni', 'grafikKasMasuk', 'grafikKasKeluar', 'balance'));
     }
     public function setting(Request $request)
     {

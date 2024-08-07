@@ -43,6 +43,33 @@
                     </table>
                 </div>
             </div>
+            <div class="card shadow mb-1">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Akun Admin</h6>
+                </div>
+                <div class="card-body pt-1">
+                    <form action="{{ url('edit-akun') }}" method="post" id="modalForm">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Username</span>
+                                </div>
+                                <input class="form-control " type="text" name="username">
+                            </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Password</span>
+                                </div>
+                                <input type="password" class="form-control " type="text" name="password">
+                            </div>
+                            <div class="form-group col-6 d-flex justify-content-around items-center" style="margin: auto">
+                                <button id="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal fade" id="dialogmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

@@ -42,11 +42,12 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr class="table-active">
-                                        <th>Nomor Kas</th>
+                                        <th>Nomor</th>
                                         <th>Tanggal</th>
                                         <th>Jenis</th>
                                         <th>Kategori</th>
                                         <th>Jumlah</th>
+                                        <th>Saldo</th>
                                         <th class="no-sort">Keterangan</th>
                                     </tr>
                                 </thead>
@@ -73,6 +74,8 @@
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">Rp. {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                                            <td class="text-nowrap">Rp. {{ number_format($item->saldo, 0, ',', '.') }}</td>
+
                                             <td>{{ $item->keterangan }}</td>
                                         </tr>
                                     @endforeach

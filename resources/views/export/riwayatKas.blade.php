@@ -4,26 +4,23 @@
 <head>
     <title>Laporan Arus Kas</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    {{-- <link href="{{ url('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css"> --}}
-    {{-- <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet"> --}}
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> --}}
     <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
+        .report-header {
+            display: flex;
+            width: 100vw;
+            text-align: center;
         }
 
-        .report-header {
-            text-align: center;
-            margin-bottom: 20px;
+        .report-header .logo {
+            /* width: 100px; */
+            display: flex;
         }
 
         .report-header img {
-            width: 100px;
+            width: 200px;
+            margin: auto;
         }
 
         .report-body {
@@ -41,17 +38,43 @@
             text-align: right;
             margin-top: 20px;
         }
+
+        .text-nowrap {
+            white-space: nowrap !important;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+        }
+
+        .saldo-awal {
+            background-color: #c9ecd9;
+        }
     </style>
 </head>
 
 <body>
-    <div class="report-header">
-        <img src="{{ url('img/logo.webp') }}" alt="Company Logo">
-        <h1 class="mb-1">Laporan Arus Kas</h1>
-        <h2 class="mb-1">KOPERASI JASA KELUARGA SEHAT SEJAHTERA</h2>
-        <h2>{{ $start_date }} - {{ $end_date }}</h2>
-    </div>
-
+    <table align="center" style="margin-bottom: 1rem">
+        <tr>
+            <td>
+                <img src="{{ url('img/logoPrint.webp') }}" alt="Company Logo" width="150" height="150">
+            </td>
+            <td>
+                <center>
+                    <font size="6"><b>BUKU KAS</b></font><BR>
+                    <font size="3">{{ $start_date }} - {{ $end_date }}</font>
+                </center>
+            </td>
+        </tr>
+    </table>
     <table class="report-body">
         <thead>
             <tr>
@@ -59,15 +82,26 @@
                 <th>Tanggal</th>
                 <th>Jenis</th>
                 <th>Kategori</th>
-                <th>Jumlah</th>
+                <th>debet</th>
+                <th>kredit</th>
+                <th>saldo</th>
                 <th class="no-sort">Keterangan</th>
             </tr>
         </thead>
         <tbody>
             @php
-                $total = 0;
+                $debet = 0;
+                $kredit = 0;
+                $saldo = $saldoAwal;
             @endphp
             @foreach ($kas as $item)
+                @if ($loop->first)
+                    <tr class="saldo-awal">
+                        <td colspan="6" style="text-align: center">Saldo Awal</td>
+                        <td><strong>Rp. {{ number_format($saldo, 0, ',', '.') }}</strong></td>
+                        <td>Saldo Awal</td>
+                    </tr>
+                @endif
                 <tr>
                     <td class="text-nowrap">{{ $item->no_kas }}</td>
                     <td class="text-nowrap">{{ $item->tanggal }}</td>
@@ -75,21 +109,44 @@
                     <td>
                         @if ($item->kategoris)
                             @foreach ($item->kategoris as $kategori)
-                                <span class="badge {{ $kategori->class }}">{{ $kategori->nama }}
-                                </span>
+                                {{ $kategori->nama }}
                             @endforeach
                         @endif
+
                     </td>
-                    <td>Rp. {{ number_format($item->jumlah, 0, ',', '.') }}</td>
-                    @php
-                        $total += $item->jumlah;
-                    @endphp
+                    <td class="text-nowrap"><strong>
+                            @if ($item->jenis == 'masuk')
+                                Rp. {{ number_format($item->jumlah, 0, ',', '.') }}
+                                @php
+                                    $debet += $item->jumlah;
+                                    $saldo += $item->jumlah;
+                                @endphp
+                            @else
+                                -
+                            @endif
+                        </strong>
+                    </td>
+                    <td class="text-nowrap"><strong>
+                            @if ($item->jenis == 'keluar')
+                                Rp. {{ number_format($item->jumlah, 0, ',', '.') }}
+                                @php
+                                    $kredit += $item->jumlah;
+                                    $saldo -= $item->jumlah;
+                                @endphp
+                            @else
+                                -
+                            @endif
+                        </strong>
+                    </td>
+                    <td class="text-nowrap"><strong>Rp. {{ number_format($saldo, 0, ',', '.') }}</strong></td>
                     <td>{{ $item->keterangan }}</td>
                 </tr>
             @endforeach
             <tr>
                 <td colspan="4" class="text-right"><strong>Total</strong></td>
-                <td class="text-nowrap"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
+                <td class="text-nowrap"><strong>Rp. {{ number_format($debet, 0, ',', '.') }}</strong></td>
+                <td class="text-nowrap"><strong>Rp. {{ number_format($kredit, 0, ',', '.') }}</strong></td>
+                <td class="text-nowrap"><strong>Rp. {{ number_format($saldo, 0, ',', '.') }}</strong></td>
                 <td></td>
             </tr>
         </tbody>
@@ -104,7 +161,7 @@
                 <p>{{ $ketua }}</p>
             </td>
             <td>
-                <p class="mb-1">Mengetahui</p>
+                <p class="mb-1"></p>
                 <p class="mb-1">Bendahara</p>
                 <br>
                 <br>

@@ -18,11 +18,11 @@
                                 <input type="date" class="form-control" id="tanggal" name="tanggal"
                                     value="{{ date('Y-m-d') }}" required>
                                 <label for="kategori">Kategori</label>
-                                <select id="kategori" class="form-control" name="kategori[]" required></select>
+                                <select id="kategori" class="form-control" name="kategori[]"></select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="jenis">Jenis</label>
-                                <select id="jenis" class="form-control" name="jenis">
+                                <select id="jenis" class="form-control" name="jenis" required>
                                     <option value="">Pilih Jenis</option>
                                     <option value="masuk">Kas Masuk</option>
                                     <option value="keluar">Kas Keluar</option>

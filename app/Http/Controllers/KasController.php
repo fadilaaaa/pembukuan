@@ -135,6 +135,9 @@ class KasController extends Controller
     {
         $start_date = $request->start ?? date('Y-m-d', 0);
         $end_date = $request->end ?? Carbon::now();
+        if(is_string($end_date)){
+        $end_date = Carbon::createFromFormat('Y-m-d', $end_date)->endOfDay()->toDateTimeString();
+}
         $ketua = $request->ketua ?? '';
         $bendahara = $request->bendahara ?? '';
         $kas = Kas::whereBetween(
@@ -142,8 +145,8 @@ class KasController extends Controller
             [$start_date, $end_date],
             $boolean = 'or'
         )->get();
-        $kasBeforeSaldo = Kas::where('created_at', '<', $start_date)->orderByDesc('created_at')->first()->saldo;
-        // $saldo = $kasBeforeSaldo ? $kasBeforeSaldo->saldo : 0;
+        $kasBeforeSaldo = Kas::where('created_at', '<', $start_date)->orderByDesc('created_at')->first();
+        $kasBeforeSaldo = $kasBeforeSaldo ? $kasBeforeSaldo->saldo : 0;
         $pdf = Pdf::loadView('export.riwayatKas', [
             'kas' => $kas,
             'start_date' => Carbon::parse($start_date)->translatedFormat('d F Y'),

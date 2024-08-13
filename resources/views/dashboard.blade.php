@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title', 'Dashboard')
-
+{{-- @dd(public_path('img/logo.png')) --}}
 @section('content')
     <div class="container-fluid">
 

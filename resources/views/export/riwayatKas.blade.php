@@ -4,8 +4,6 @@
 <head>
     <title>Laporan Arus Kas</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> --}}
     <style>
         .report-header {
             display: flex;
@@ -65,7 +63,7 @@
     <table align="center" style="margin-bottom: 1rem">
         <tr>
             <td>
-                <img src="{{ url('img/logoPrint.webp') }}" alt="Company Logo" width="150" height="150">
+                <img src="{{ public_path('img/logoPrint.webp') }}" alt="Company Logo" width="150" height="150">
             </td>
             <td>
                 <center>

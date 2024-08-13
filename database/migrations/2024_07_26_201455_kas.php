@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("tanggal");
             $table->string("jenis");
             $table->unsignedInteger("jumlah");
-            $table->unsignedInteger("saldo");
+            $table->unsignedBigInteger("saldo");
             $table->string("keterangan");
             $table->timestamps();
         });

@@ -35,6 +35,7 @@
                                         <select id="kategori" class="form-control" name="kategori[]" required></select>
                                     </div>
                                     <button class="btn btn-primary">Filter</button>
+                                    <a href="{{ url('/riwayat-kas') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>
                         </form>

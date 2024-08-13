@@ -28,13 +28,13 @@
                                         <input value="{{ $end_date }}" class="form-control " type="date"
                                             name="end" id="endDate">
                                     </div>
-                                    <div class="input-group col-md-6 col-xl-5">
+                                    <div class="input-group col-md-6 col-xl-4">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">Kategori</span>
                                         </div>
                                         <select id="kategori" class="form-control" name="kategori[]" required></select>
                                     </div>
-                                    <button class="btn btn-primary">Filter</button>
+                                    <button class="btn btn-primary mr-1">Filter</button>
                                     <a href="{{ url('/riwayat-kas') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </div>

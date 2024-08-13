@@ -49,7 +49,7 @@ class KasController extends Controller
                 'tanggal' => 'required',
                 'jenis' => 'required',
                 'keterangan' => 'required',
-                'kategori' => 'required',
+                // 'kategori' => 'required',
             ]);
             DB::beginTransaction();
             try {
@@ -135,9 +135,9 @@ class KasController extends Controller
     {
         $start_date = $request->start ?? date('Y-m-d', 0);
         $end_date = $request->end ?? Carbon::now();
-        if(is_string($end_date)){
-        $end_date = Carbon::createFromFormat('Y-m-d', $end_date)->endOfDay()->toDateTimeString();
-}
+        if (is_string($end_date)) {
+            $end_date = Carbon::createFromFormat('Y-m-d', $end_date)->endOfDay()->toDateTimeString();
+        }
         $ketua = $request->ketua ?? '';
         $bendahara = $request->bendahara ?? '';
         $kas = Kas::whereBetween(

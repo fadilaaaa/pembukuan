@@ -90,6 +90,44 @@
 
         </div>
     </div>
+    <div class="modal fade" id="PucerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="formPuc" action="{{ url('/cetak-voucher') }}" method="post">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cetak Voucher
+                            <input id="" type="submit" class="btn btn-primary" value="Cetak" />
+                        </h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mb-5">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Ketua</span>
+                            </div>
+                            <input class="form-control " type="text" name="ketua">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Bendahara</span>
+                            </div>
+                            <input class="form-control " type="text" name="bendahara">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">No kas</span>
+                            </div>
+                            <select id="nokas" class="form-control" name="nokas[]"></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="dialogmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -160,24 +198,50 @@
             });
             const dataFilterBox = $('#dataTable_filter');
 
-
+            fetch("{{ url('/nokas-keluar') }}")
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(item => {
+                        $('#nokas').append(`<option value="${item.no_kas}">${item.no_kas}</option>`);
+                    });
+                    $('#nokas').selectize({
+                        delimiter: ',',
+                        persist: false,
+                        maxItems: null,
+                        create: false,
+                    });
+                })
         });
     </script>
     <script>
         $(document).ready(function() {
+
             $('#dataTable_length').parent().html(`
-        <div class="col-12" id="btn_cetak">
-            <button href="{{ url('admin/pengaduan/export') }}" class="btn btn-warning" >
+        <div class="col-12" >
+            <button id="btn_cetak" href="{{ url('admin/pengaduan/export') }}" class="btn btn-warning" >
                 Cetak Laporan
             </button>
+            <button id="cetPucer" class="btn btn-success" >
+                Cetak Voucher
+                </button>
         </div>
         `)
             $('#btn_cetak').on('click', function(e) {
                 e.preventDefault();
                 $('#dialogmodal').modal('show');
             })
-            // $('#dataTable_filter').parent().addClass('col-md-12')
-            // $('#dataTable_info').parent().parent().prepend();
+
+            $('#cetPucer').on('click', function(e) {
+                e.preventDefault();
+                $('#nokas')[0].selectize.setValue('');
+                $('#PucerModal').modal('show');
+            })
+            $('#puccetid').on('click', function(e) {
+                e.preventDefault();
+                // formPuc.submit()
+                console.log('asu');
+
+            })
 
 
             var dataKategori = @json($kat);

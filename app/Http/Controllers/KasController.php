@@ -157,6 +157,23 @@ class KasController extends Controller
         ])->setPaper('a4', 'landscape');
         return $pdf->download('riwayat-kas.pdf');
     }
+    public function getnokaskeluar()
+    {
+        $kas = Kas::where('jenis', 'keluar')->get('no_kas');
+        return response()->json($kas);
+    }
+    public function cetakVoucher(Request $request)
+    {
+        $ketua = $request->ketua ?? '';
+        $bendahara = $request->bendahara ?? '';
+        $kas = Kas::whereIn('no_kas', $request->nokas)->get();
+        $pdf = Pdf::loadView('export.tes', [
+            'kas' => $kas,
+            'ketua' => $ketua,
+            'bendahara' => $bendahara,
+        ])->setPaper('a4', 'landscape');
+        return $pdf->download('voucher-' . time() . '.pdf');
+    }
     public function tescetak()
     {
         $kas = Kas::where('jenis', 'keluar')->first();

@@ -22,7 +22,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="jenis">Jenis</label>
-                                <select id="jenis" class="form-control" name="jenis" required>
+                                <select class="form-control" name="jenis" required>
                                     <option value="">Pilih Jenis</option>
                                     <option value="masuk">Kas Masuk</option>
                                     <option value="keluar">Kas Keluar</option>

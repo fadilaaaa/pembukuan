@@ -26,7 +26,8 @@ Route::get('logout', function () {
     return redirect('/');
 });
 Route::get('/pucer/{id}', [App\Http\Controllers\KasController::class, 'getPucer']);
-
+Route::get('/nokas-keluar', [App\Http\Controllers\KasController::class, 'getNoKasKeluar']);
+Route::post('/cetak-voucher', [App\Http\Controllers\KasController::class, 'cetakVoucher']);
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth');
 // Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 Route::get('/setting', [App\Http\Controllers\DashboardController::class, 'setting'])->middleware('auth');

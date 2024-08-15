@@ -81,15 +81,25 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="text-nowrap">{{ $kas->no_kas }}</td>
-                <td class="text-nowrap">{{ $kas->tanggal }}</td>
-                <td>{{ $kas->keterangan }}</td>
-                <td class="text-nowrap">Rp. {{ number_format($kas->jumlah, 0, ',', '.') }}</td>
-            </tr>
+            @php
+                $total = 0;
+            @endphp
+
+            @foreach ($kas as $item)
+                <tr>
+                    @php
+                        $total += $item->jumlah;
+                    @endphp
+                    <td class="text-nowrap">{{ $item->no_kas }}</td>
+                    <td class="text-nowrap">{{ $item->tanggal }}</td>
+                    <td>{{ $item->keterangan }}</td>
+                    <td class="text-nowrap">Rp. {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+
             <tr>
                 <td colspan="3" class="text-right">Total</td>
-                <td class="text-nowrap"><strong>Rp. {{ number_format($kas->jumlah, 0, ',', '.') }}</strong></td>
+                <td class="text-nowrap"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
             </tr>
         </tbody>
     </table>
